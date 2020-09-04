@@ -395,10 +395,24 @@ GuidePanel = Ext.extend(Ext.Panel,{
 			],id:"userIdTwo"
 		};
 
+		var menuSchedule = {
+				text : "<font size = '3px' style='margin-left:7px'>定&nbsp;&nbsp;时&nbsp;&nbsp;调&nbsp;&nbsp;度</font>",icon:'ui/images/i_scheduler.png', cls:'nav-node',
+				children:[
+					{id:"schedulerMonitor",text:"<font size = '2px' style='margin-left:9px;'>定时调度管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_timerManager_24.png'},
+				]
+			};
+		
+		var dataStatistics = {
+				text : "<font size = '3px' style='margin-left:7px'>数&nbsp;&nbsp;据&nbsp;&nbsp;统&nbsp;&nbsp;计</font>",icon:'ui/images/chart/chart_bar.png', cls:'nav-node',
+				children:[
+					{id:"dataStatistics",text:"<font size = '2px' style='margin-left:9px;'>数据统计表</font>",cls:"navl",leaf:true,icon:'ui/images/chart/chart_curve.png'},
+				]
+			};
+		
 		var allMenus = [menuPlatform,menuModel,menuTask,menuSchedule,menuLog];
 
 		if( loginUserName === 'sdsjfzj_cqdc' ){
-			allMenus.push(/*menuNode,*/ menuUser);
+			allMenus.push(/*menuNode,*/ menuUser, dataStatistics);
 		}
 
 		fristGuidePanel = new Ext.tree.TreePanel({
@@ -417,46 +431,6 @@ GuidePanel = Ext.extend(Ext.Panel,{
 			animate: false,
 			listeners: {
 				afterrender: function(node) {
-					// fristGuidePanel.expandAll();
-					//默认打开作业管理模块
-					// var rootnodes = fristGuidePanel.getRootNode().childNodes;   //获取主节点
-					// for(var i=0;i<rootnodes.length;i++){  //从节点中取出子节点依次遍历
-					// 	var rootnode = rootnodes[i];
-					// 	if(rootnode.id=="moduleIdTwo"){
-					// 		rootnode.expand();
-					// 		var leafNodes=rootnode.childNodes;
-					// 		for(var k=0;k<leafNodes.length;k++){
-					// 			var leafNode=leafNodes[k];
-					// 			if(leafNode.id=="platformMonitor"){
-					// 				leafNode.fireEvent("click",leafNode)
-					// 			}
-					// 		}
-					// 		rootnode.collapse();
-					// 	}else if(rootnode.id=="userIdTwo"){
-							//根据用户的权限来确认可见的用户模块
-							// if(loginUserType!=1 && loginUserName!="admin"){
-							// 	// rootnode.remove();
-							// }else{
-							// 	rootnode.expand();
-							// 	var leafNodesU=rootnode.childNodes;
-							// 	for(var k=0;k<leafNodesU.length;k++){
-							// 		var leafNode=leafNodesU[k];
-							// 		if(loginUserName!="admin" && leafNode.id=="userGroupMonitor"){
-										// leafNode.remove();
-					// 				}
-					// 			}
-					// 			rootnode.collapse();
-					// 		}
-					// 	}
-					// }
-					// rootnodes = fristGuidePanel.getRootNode().childNodes;
-					// for(var i=0;i<rootnodes.length;i++){  //从节点中取出子节点依次遍历
-					// 	var rootnode=rootnodes[i];
-						// if(rootnode.id=="task"){
-						// 	if(loginUserTaskGroupPower!=1 && loginUserName!="admin")
-								// rootnode.remove();
-						// }
-					// }
 				}
 			},
 			rootVisible: false
@@ -660,6 +634,13 @@ GuidePanel = Ext.extend(Ext.Panel,{
 				showHistoryLogPanel(secondGuidePanel);
 			}else if(node.text=="<font size = '2px' style='margin-left:9px;'>平台概况</font>"){
 				showModuleView(secondGuidePanel);
+			}
+			if(node.id=="dataStatistics"){
+				totalView(secondGuidePanel);
+				//showDataStatisticsFailureJob(secondGuidePanel);
+				//showDataStatisticsVolatilityView(secondGuidePanel)
+				//showDataStatisticsTenView(secondGuidePanel)
+				//showDataStatistics30View(secondGuidePanel);
 			}
 		});
 

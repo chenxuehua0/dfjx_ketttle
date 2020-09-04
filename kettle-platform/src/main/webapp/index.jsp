@@ -16,6 +16,13 @@
 	  	
 	  	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ui/css/public.css" />
 		<link rel='shortcut icon' href='${pageContext.request.contextPath}/img/f1_logo_small.ico' type=‘image/x-ico’ />
+		<style type="text/css">
+			 #toolbar2 .x-toolbar ,#toolbar3 .x-toolbar , #toolbar1 .x-toolbar {
+				background-image: none;
+				border-style: none;
+				background-color: white;
+			}
+		</style>
 	</head>
 	<body>
 
@@ -184,7 +191,7 @@
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/js/other/TextAreaDialog.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/js/other/AnswerDialog.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/js/other/FileExplorerWindow.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/ECharts/echarts.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/ECharts/echarts.min.js"></script>
 	    <!-- 系统入口对话框 -->
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/js/GuidePanel.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/js/initMain.js"></script>
@@ -203,5 +210,13 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/taskHistoryLogs.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/moduleView.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/hadoopCluster.js"></script>
+		
+		<!-- 数据统计js导入 start -->
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/statistics/totalView.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/statistics/day30View.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/statistics/ten10View.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/statistics/volatilityView.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/statistics/failureJobView.js"></script>
+		<!-- 数据统计js导入 end   -->
 	</body>
 </html>

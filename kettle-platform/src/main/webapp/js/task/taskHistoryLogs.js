@@ -241,7 +241,7 @@ function logStatuSelect(){
     var logStatuData=[
         ["成功","成功"],
         ["失败","失败"],
-        ["系统调度失败","系统调度失败"]
+        ["程序错误","程序错误"]
     ];
     var proxy=new Ext.data.MemoryProxy(logStatuData);
     var reader=new Ext.data.ArrayReader({},[

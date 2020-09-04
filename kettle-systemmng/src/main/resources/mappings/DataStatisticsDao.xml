@@ -1,0 +1,206 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.seaboxdata.systemmng.dao.DataStatisticsDao">
+    <!--根据登录名查找用户-->
+    <select id="getDay30" parameterType="String" resultType="java.util.HashMap">
+		SELECT
+			<choose>
+				<when test='deptNm!=null and deptNm!=""' >
+				    t.dept_nm                     dept_nm,
+				    t.dept_nm_desc                dept_nm_desc,
+				</when>
+				<otherwise >
+					"all"                dept_nm,
+					"全部"                                             dept_nm_desc,
+				</otherwise>
+			</choose>
+		    t.statt_dt                    statt_dt,
+		    SUM(tbl_data_qty )            tbl_data_qty,
+		    SUM(t.tbl_data_spa)           tbl_data_spa,
+		    SUM(t.tbl_day_data_exchg_qty) tbl_day_data_exchg_qty
+		FROM
+		    r_res_tbl_exchg_statt t
+		WHERE
+		    t.statt_dt BETWEEN date_sub(#{sDate}, interval 30 DAY) AND DATE_FORMAT(#{sDate}, '%Y-%m-%d')
+		
+		<choose>
+			<when test='deptNm!=null and deptNm!=""' >
+		   		AND t.dept_nm = #{deptNm}
+			</when>
+			<otherwise >
+			</otherwise>
+		</choose>		
+		GROUP BY
+			<choose>
+				<when test='deptNm!=null and deptNm!=""' >
+					t.dept_nm_desc,
+		    		t.dept_nm,
+				</when>
+				<otherwise >
+				</otherwise>
+			</choose>	
+		    t.statt_dt
+		ORDER BY
+		    t.statt_dt ASC
+    </select>
+
+    <select id="getDay5" parameterType="String" resultType="java.util.HashMap">
+		SELECT
+			<choose>
+				<when test='deptNm!=null and deptNm!=""' >
+				    t.dept_nm                     dept_nm,
+				    t.dept_nm_desc                dept_nm_desc,
+				</when>
+				<otherwise >
+					"all"                         dept_nm,
+					"全部"                         dept_nm_desc,
+				</otherwise>
+			</choose>
+		    t.statt_dt                    statt_dt,
+		    SUM(t.tbl_day_data_exchg_qty) tbl_day_data_exchg_qty
+		FROM
+		    r_res_tbl_exchg_statt t
+		WHERE
+		    t.statt_dt BETWEEN date_sub(#{sDate}, interval 5 DAY) AND DATE_FORMAT(#{sDate}, '%Y-%m-%d')
+		
+		<choose>
+			<when test='deptNm!=null and deptNm!=""' >
+		   		AND t.dept_nm = #{deptNm}
+			</when>
+			<otherwise >
+			</otherwise>
+		</choose>		
+		GROUP BY
+			<choose>
+				<when test='deptNm!=null and deptNm!=""' >
+					t.dept_nm_desc,
+		    		t.dept_nm,
+				</when>
+				<otherwise >
+				</otherwise>
+			</choose>	
+		    t.statt_dt
+		ORDER BY
+		    t.statt_dt ASC
+    </select>
+
+	<select id="getDeptsSelect" resultType="java.util.HashMap">
+		SELECT
+		    *
+		FROM
+		    r_dept_desc t
+		ORDER BY
+		    t.dept_nm ASC	
+	</select>
+	
+	<select id="getCurrentTen" parameterType="String" resultType="java.util.HashMap">
+		SELECT
+		    t.dept_nm,
+		    t.dept_nm_desc,
+		    date_format(t.statt_dt, '%Y-%m') statt_dt,
+		    SUM(t.tbl_data_qty)              tbl_data_qty
+		FROM
+		    r_res_tbl_exchg_statt t
+		WHERE
+		    date_format(t.statt_dt, '%Y-%m') = DATE_FORMAT(#{sDate}, '%Y-%m')
+		GROUP BY
+		    t.dept_nm,
+		    t.dept_nm_desc,
+		    t.statt_dt
+		ORDER BY
+		    SUM(t.tbl_data_qty) DESC LIMIT 10	
+	</select>
+	<select id="getLastMonthTen" parameterType="String" resultType="java.util.HashMap">
+		SELECT
+		    t.dept_nm,
+		    t.dept_nm_desc,
+		    date_format(t.statt_dt, '%Y-%m') statt_dt,
+		    SUM(t.tbl_data_qty)              tbl_data_qty
+		FROM
+		    r_res_tbl_exchg_statt t
+		WHERE
+		    date_format(t.statt_dt, '%Y-%m') = DATE_FORMAT(date_sub(#{sDate}, interval 1 MONTH), '%Y-%m')
+		GROUP BY
+		    t.dept_nm,
+		    t.dept_nm_desc,
+		    t.statt_dt
+		ORDER BY
+		    SUM(t.tbl_data_qty) DESC LIMIT 10	
+	</select>
+	<select id="getTwoMonthesAgoTen" parameterType="String" resultType="java.util.HashMap">
+		SELECT
+		    t.dept_nm,
+		    t.dept_nm_desc,
+		    date_format(t.statt_dt, '%Y-%m') statt_dt,
+		    SUM(t.tbl_data_qty)              tbl_data_qty
+		FROM
+		    r_res_tbl_exchg_statt t
+		WHERE
+		    date_format(t.statt_dt, '%Y-%m') = DATE_FORMAT(date_sub(#{sDate}, interval 2 MONTH), '%Y-%m')
+		GROUP BY
+		    t.dept_nm,
+		    t.dept_nm_desc,
+		    t.statt_dt
+		ORDER BY
+		    SUM(t.tbl_data_qty) DESC LIMIT 10	
+	</select>
+	
+	<select id="getFailureJob" parameterType="String" resultType="java.util.HashMap">
+		SELECT
+			<choose>
+				<when test='deptNm!=null and deptNm!=""' >
+				    k.dept_nm                     dept_nm,
+				    k.dept_nm_desc                dept_nm_desc,
+				</when>
+				<otherwise >
+					"all"                         dept_nm,
+					"全部"                         dept_nm_desc,
+				</otherwise>
+			</choose>
+		    k.job_fail_hr,
+		    COUNT(1)                              fail_count
+		FROM
+		    r_24_hr_fail_job_distr k,
+		    (
+		        SELECT
+					<choose>
+						<when test='deptNm!=null and deptNm!=""' >
+						    t.dept_nm,
+						</when>
+						<otherwise >
+						</otherwise>
+					</choose>
+		            MAX(t.statt_dt) statt_dt
+		        FROM
+		            r_24_hr_fail_job_distr t
+					<choose>
+						<when test='deptNm!=null and deptNm!=""' >
+						    GROUP BY t.dept_nm
+						</when>
+						<otherwise >
+						</otherwise>
+					</choose>		            
+		        ) m
+		WHERE
+		    k.statt_dt = m.statt_dt
+		<choose>
+			<when test='deptNm!=null and deptNm!=""' >
+			    AND k.dept_nm = m.dept_nm
+			    and k.dept_nm = #{deptNm}
+			</when>
+			<otherwise >
+			</otherwise>
+		</choose>			    
+		GROUP BY
+		<choose>
+			<when test='deptNm!=null and deptNm!=""' >
+			    k.dept_nm_desc,
+		    	k.dept_nm,
+			</when>
+			<otherwise >
+			</otherwise>
+		</choose>		
+		    k.job_fail_hr
+		ORDER BY
+		    k.job_fail_hr
+	</select>
+</mapper>
