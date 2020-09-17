@@ -12,7 +12,7 @@ public class Test {
 
 		//System.out.println(KettleEncr.decryptPasswd("2be98afc86aa7f2e4cb79ce71da9fa6d4"));
 		
-		 System.out.println(decryptPassword("70d1f7dbf95894c6d1fd388c53fad38f99"));
+		 System.out.println(decryptPassword("2be98afc86aa7f2e4cb79ff228dc6fa8c"));
 		 
 	}
 	

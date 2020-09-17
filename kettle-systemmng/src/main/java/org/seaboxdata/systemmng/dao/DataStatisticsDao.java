@@ -21,6 +21,10 @@ public interface DataStatisticsDao {
 
 	List<Map<String, Object>> getDay5(@Param("deptNm") String deptNm, @Param("sDate") String date) throws Exception;
 
-	List<Map<String, Object>> getFailureJob(@Param("deptNm") String deptNm) throws Exception;
+	List<Map<String, Object>> getFailureJob(@Param("deptNm") String deptNm,@Param("maxDate")String maxDate) throws Exception;
+
+	String getMaxDate(@Param("deptNm")String deptNm) throws Exception;
+	
+	String get24MaxDate(@Param("deptNm")String deptNm) throws Exception;
 
 }

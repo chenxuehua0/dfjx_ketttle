@@ -144,4 +144,32 @@
         on rol.id = usr_rol.role_id and rol.role_code='bmgly'
         where usr.id=#{userId}
     </select>
+    
+    <select id="queryResource" parameterType="String" resultType="org.seaboxdata.systemmng.entity.ResourceEntity">
+		SELECT
+		    t.id            AS id,
+		    t.NAME          AS text,
+		    t.ALIAS         AS ALIAS,
+		    t.SN            AS sn,
+		    t.ICON          AS icon,
+		    t.cls           AS cls ,
+		    t.RESOURCE_TYPE AS resourceType,
+		    t.PARENT_ID     AS parentId,
+		    t.DEFAULT_URL   AS defaultUrl,
+		    t.IS_OPEN       AS isOpen,
+		    t.DESC          AS 'desc'
+		FROM
+		    sys_resource t ,
+		    sys_role_resource a ,
+		    d_user_group_member_attribute b,
+		    r_user c
+		WHERE
+		    t.id = a.RES_ID
+		AND a.ROLE_ID = b.USER_TYPE
+		AND c.LOGIN = b.USER_NAME
+		AND c.ID_USER = #{userName}
+		ORDER BY
+		    t.PARENT_ID,
+		    t.SN 
+    </select>
 </mapper>

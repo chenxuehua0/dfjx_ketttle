@@ -588,6 +588,8 @@ public class DatabaseController {
             databaseMeta = tra.findDatabase(databaseInfo);
     	}
 
+    	List<DatabaseMeta>  databseList = RepositoryUtils.getRepository().readDatabases();
+    	
         ArrayList result = new ArrayList();
         if (StringUtils.hasText(nodeId)) {
             if ("root".equals(nodeId)) {

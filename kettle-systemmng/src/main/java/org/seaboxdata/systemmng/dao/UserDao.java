@@ -1,6 +1,8 @@
 package org.seaboxdata.systemmng.dao;
 
 import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Param;
+import org.seaboxdata.systemmng.entity.ResourceEntity;
 import org.seaboxdata.systemmng.entity.UserEntity;
 
 import java.util.List;
@@ -30,4 +32,6 @@ public interface UserDao {
     public List<UserEntity> getUsers(String userGroupName);
 
     public Integer isDeptMgr(String userId);
+
+	public List<ResourceEntity> queryResource(@Param("userName")String userName);
 }

@@ -22,6 +22,15 @@
 				border-style: none;
 				background-color: white;
 			}
+			
+			.navl a>span {
+				font-size: 13px;
+				margin-left:9px;
+			}
+			.nav-node a>span {
+				font-size: 15px;
+				margin-left:7px;
+			}
 		</style>
 	</head>
 	<body>
@@ -210,6 +219,8 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/taskHistoryLogs.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/moduleView.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/hadoopCluster.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/application.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/approval.js"></script>
 		
 		<!-- 数据统计js导入 start -->
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/statistics/totalView.js"></script>

@@ -123,7 +123,7 @@ function moduleViewDataTen(deptVal, sdate) {
 			} ],
 			xAxis : [ {
 				type : 'value',
-				name : '',
+				name : '数据条数(万条)',
 				splitNumber : 8, //轴线个数
 				nameTextStyle : {
 					color : 'balck'
@@ -139,6 +139,7 @@ function moduleViewDataTen(deptVal, sdate) {
 				splitLine : {
 					show : true,
 					lineStyle : {
+						type : 'dashed',
 						color : '#fedd8b'
 					}
 				},

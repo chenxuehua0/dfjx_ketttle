@@ -47,15 +47,20 @@
 
     <!-- 根据用户名查询当前用户的权限相关信息 -->
     <select id="getInfoByUserName" resultType="org.seaboxdata.systemmng.entity.UserGroupAttributeEntity">
-        select
-        a.ID_USERGROUP_MEMBER_ATTRIBUTE as groupAttributeId,
-        a.USER_GROUP_NAME as userGroupName,
-        a.USER_NAME as userName,
-        a.SLAVE_PERMISSION_TYPE as slavePremissonType,
-        a.TASK_PERMISSION_TYPE as taskPremissionType,
-        a.USER_TYPE as userType
-        from d_user_group_member_attribute a
-        where a.USER_NAME = #{name}
+		SELECT
+		    t.ID_USERGROUP_MEMBER_ATTRIBUTE AS groupAttributeId,
+		    t.USER_GROUP_NAME               AS userGroupName,
+		    a.ID_USER_GROUP                 AS userGroupId,
+		    t.USER_NAME                     AS userName,
+		    t.SLAVE_PERMISSION_TYPE         AS slavePremissonType,
+		    t.TASK_PERMISSION_TYPE          AS taskPremissionType,
+		    t.USER_TYPE                     AS userType
+		FROM
+		    d_user_group_member_attribute t,
+		    d_user_group a
+		WHERE
+		    t.USER_GROUP_NAME = a.USER_GROUP_NAME
+		AND t.USER_NAME = #{name}
     </select>
 
     <!-- 根据用户组id获取当前用户可见的任务组 -->

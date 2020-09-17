@@ -163,15 +163,6 @@ public class RepositoryController {
 			if(directory == null)
 				directory = repository.getUserHomeDirectory();
 			
-			/*
-			 * String msg = ""; for(String taskGroupName:taskGroupArray){
-			 * TaskGroupAttributeEntity attr=new TaskGroupAttributeEntity();
-			 * attr.setTaskGroupName(taskGroupName); attr.setType("trans");
-			 * attr.setTaskName(transName); List<TaskGroupAttributeEntity> listAttr =
-			 * cService.getTaskGroupAttribute(attr); if (listAttr.size() > 0) { msg +=
-			 * "任务组【"+ taskGroupName +"】已维护转换名为:【"+ transName +"】的转换，请检查！</br>"; } }
-			 * if(msg.length() > 0) { JsonUtils.fail(msg + "请重新输入！"); return; }
-			 */			
 			if (repository.exists(transName, directory, RepositoryObjectType.TRANSFORMATION)) {
 				JsonUtils.fail("该转换已经存在，请重新输入！");
 				return;

@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 import org.seaboxdata.systemmng.bean.PageforBean;
 import org.seaboxdata.systemmng.dao.UserDao;
 import org.seaboxdata.systemmng.dao.UserGroupDao;
+import org.seaboxdata.systemmng.entity.ResourceEntity;
 import org.seaboxdata.systemmng.entity.UserEntity;
 import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
 import org.seaboxdata.systemmng.service.system.UserService;
+import org.seaboxdata.systemmng.utils.ResourceTreeUtils;
 import org.seaboxdata.systemmng.utils.common.StringDateUtil;
 import org.seaboxdata.systemmng.utils.task.HttpClientUtil;
 import org.seaboxdata.systemmng.utils.task.KettleEncr;
@@ -322,4 +324,13 @@ public class UserServiceImpl implements UserService{
     public void updatePassword(UserEntity user) throws Exception{
         userDao.updateUser(user);
     }
+
+	@Override
+	public List<ResourceEntity> queryResource(String userName) throws Exception {
+		List<ResourceEntity> list = userDao.queryResource(userName);
+		 
+		List<ResourceEntity> treeList = ResourceTreeUtils.buidTree(list);
+		
+		return treeList;
+	}
 }

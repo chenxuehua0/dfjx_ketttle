@@ -290,43 +290,6 @@ function repositryOpenTrans(secondGuidePanel,path,text){
 		Ext.getBody().unmask();
 	}
 }
-//transGuidePanel =
-//	new Ext.tree.TreePanel({
-//		id:'transGuidePanel',
-//		title: '核心对象',
-//		useArrows: true,
-//		//region: 'east',
-//		//width:200,
-//		enableDD:true,
-//		ddGroup:'TreePanelDDGroup',
-//		autoScroll: true,
-//		animate: false,
-//		rootVisible: false,
-//		root: new Ext.tree.AsyncTreeNode({text: 'root'}),
-//		loader: new Ext.tree.TreeLoader({
-//			dataUrl: GetUrl('system/steps.do')
-//		})
-//
-//	});
-//
-//jobGuidePanel =
-//	new Ext.tree.TreePanel({
-//		id:'jobGuidePanel',
-//		title: '核心对象',
-//		useArrows: true,
-//		//region: 'east',
-//		//width:200,
-//		enableDD:true,
-//		ddGroup:'TreePanelDDGroup',
-//		autoScroll: true,
-//		animate: false,
-//		rootVisible: false,
-//		root: new Ext.tree.AsyncTreeNode({text: 'root'}),
-//		loader: new Ext.tree.TreeLoader({
-//			dataUrl: GetUrl('system/jobentrys.do')
-//		}),
-//
-//	});
 
 GuidePanel = Ext.extend(Ext.Panel,{
 	border:false,
@@ -338,93 +301,20 @@ GuidePanel = Ext.extend(Ext.Panel,{
 		loginUserType=document.getElementById("userTypeHidden").value;
 		belongToUserGroup=document.getElementById("belongToUserGroup").value;
 
-		var menuModel = {
-			id:'task',
-			cls:'nav-node',
-			icon:'ui/images/i_model.png',
-			text : "<font size = '3px' style='margin-left:7px'>模&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型</font>",
-			children:[
-				{id:"newTrans",text:"<font size = '2px' style='margin-left:9px;'>新建转换</font>",cls:"navl",leaf:true,icon:'ui/images/r_transformation.png'},
-				{id:"newJob",text:"<font size = '2px' style='margin-left:9px;'>新建作业</font>",cls:"navl",leaf:true,icon:'ui/images/r_job.png'}
-			]
-		};
-		var menuPlatform = {
-			text : "<font size = '3px' style='margin-left:7px'>平&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;台</font>",icon:'ui/images/i_platform.png', cls:'nav-node',
-			children:[
-				{id:"platformMonitor",text:"<font size = '2px' style='margin-left:9px;'>平台概况</font>",cls:"navl",leaf:true,icon:'ui/images/i_platform.png'},
-			],id:"moduleIdTwo"
-		};
-
-		var menuTask = {
-			text : "<font size = '3px' style='margin-left:7px'>任&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务</font>",icon:'ui/images/i_task.png', cls:'nav-node',
-			children:[
-				{id:"jobMonitor",text:"<font size = '2px' style='margin-left:9px;'>作业管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_jobManager.png'},
-				{id:"transMonitor",text:"<font size = '2px' style='margin-left:9px;'>转换管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_transManager.png'},
-				{id:"taskGroupMonitor",text:"<font size = '2px' style='margin-left:9px;'>任务组管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_taskGroupManager.png'},
-				{id:"taskMonitoring",text:"<font size = '2px' style='margin-left:9px;'>任务监控</font>",cls:"navl",leaf:true,icon:'ui/images/i_slaveCon.png'}
-			],id:"taskIdTwo"
-		};
-
-		var menuSchedule = {
-			text : "<font size = '3px' style='margin-left:7px'>定&nbsp;&nbsp;时&nbsp;&nbsp;调&nbsp;&nbsp;度</font>",icon:'ui/images/i_scheduler.png', cls:'nav-node',
-			children:[
-				{id:"schedulerMonitor",text:"<font size = '2px' style='margin-left:9px;'>定时调度管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_timerManager_24.png'},
-			]
-		};
-
-		var menuLog = {
-			text : "<font size = '3px' style='margin-left:7px'>日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;志</font>",icon:'ui/images/i_log.png', cls:'nav-node',
-			children:[
-				{id:"taskLog",text:"<font size = '2px' style='margin-left:9px;'>任务历史日志</font>",cls:"navl",leaf:true,icon:'ui/images/i_tasklog.png'},
-			]
-		};
-
-		var menuNode = {
-			text : "<font size = '3px' style='margin-left:7px'>节&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点</font>",icon:'ui/images/i_slave.png', cls:'nav-node',
-			children:[
-				{id:"slaveMonitor",text:"<font size = '2px' style='margin-left:9px;'>节点管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_slaveManager.png'},
-				{id:"slaveMonitoring",text:"<font size = '2px' style='margin-left:9px;'>节点监控</font>",cls:"navl",leaf:true,icon:'ui/images/i_slaveCon.png'},
-			]
-		};
-
-		var menuUser = {
-			text:"<font size = '3px' style='margin-left:7px'>用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户</font>",icon:'ui/images/i_user.png', cls:'nav-node',
-			children:[
-				{id:"userMonitor",text:"<font size = '2px' style='margin-left:9px;'>用户管理</font>",leaf:true,cls:"navl",icon:'ui/images/i_userManager_16.png'},
-				{id:"userGroupMonitor",text:"<font size = '2px' style='margin-left:9px;'>用户组管理</font>",leaf:true,cls:"navl",icon:'ui/images/i_userGroupManager.png'},
-			],id:"userIdTwo"
-		};
-
-		var menuSchedule = {
-				text : "<font size = '3px' style='margin-left:7px'>定&nbsp;&nbsp;时&nbsp;&nbsp;调&nbsp;&nbsp;度</font>",icon:'ui/images/i_scheduler.png', cls:'nav-node',
-				children:[
-					{id:"schedulerMonitor",text:"<font size = '2px' style='margin-left:9px;'>定时调度管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_timerManager_24.png'},
-				]
-			};
-		
-		var dataStatistics = {
-				text : "<font size = '3px' style='margin-left:7px'>数&nbsp;&nbsp;据&nbsp;&nbsp;统&nbsp;&nbsp;计</font>",icon:'ui/images/chart/chart_bar.png', cls:'nav-node',
-				children:[
-					{id:"dataStatistics",text:"<font size = '2px' style='margin-left:9px;'>数据统计表</font>",cls:"navl",leaf:true,icon:'ui/images/chart/chart_curve.png'},
-				]
-			};
-		
-		var allMenus = [menuPlatform,menuModel,menuTask,menuSchedule,menuLog];
-
-		if( loginUserName === 'sdsjfzj_cqdc' ){
-			allMenus.push(/*menuNode,*/ menuUser, dataStatistics);
-		}
-
 		fristGuidePanel = new Ext.tree.TreePanel({
 			useArrows: true,
 			region: 'west',
 			width: 200,
 			split: true,
-			loader : new Ext.tree.TreeLoader(),
-			root : new Ext.tree.AsyncTreeNode({
-				id:'fristGuidePanel',
-				children: allMenus
+			loader : new Ext.tree.TreeLoader({
+				dataUrl : 'resource/queryResource.do',
+				baseParams : {}
 			}),
+			root : new Ext.tree.AsyncTreeNode({
+				id:'0',
+				text: '根节点',
+			}),
+			rootVisible: false,
 			enableDD:true,
 			ddGroup:'TreePanelDDGroup',
 			autoScroll: true,
@@ -432,8 +322,7 @@ GuidePanel = Ext.extend(Ext.Panel,{
 			listeners: {
 				afterrender: function(node) {
 				}
-			},
-			rootVisible: false
+			}
 		});
 
 		var secondGuidePanel = new Ext.Panel({
@@ -453,8 +342,9 @@ GuidePanel = Ext.extend(Ext.Panel,{
 				clearInterval(moduleViewInterval);
 				moduleViewInterval="";
 			}
-			if(node.text == "<font size = '2px' style='margin-left:9px;'>新建转换</font>")
-			{
+			
+			var alias = node.attributes.alias;
+			if(alias == 'newTrans') {
 				//设置文本框格式
 				var dlg = Ext.Msg.getDialog();
 				var t = Ext.get(dlg.body).select('.ext-mb-input');
@@ -532,7 +422,7 @@ GuidePanel = Ext.extend(Ext.Panel,{
 				    }
 				});
 			}
-			else if(node.text == "<font size = '2px' style='margin-left:9px;'>新建作业</font>")
+			else if(alias == 'newJob')
 			{
 				secondGuidePanel.removeAll(true);
 				//设置文本框格式
@@ -609,38 +499,49 @@ GuidePanel = Ext.extend(Ext.Panel,{
 						addTaskGroupWindow.show(secondGuidePanel);
 				    }
 				});
-			}else if(node.text == "<font size = '2px' style='margin-left:9px;'>作业管理</font>") {
+			}else if(alias == 'jobMonitor') {
 				generateJobPanel(secondGuidePanel);
-			}else if(node.text == "<font size = '2px' style='margin-left:9px;'>转换管理</font>") {
+			}else if(alias == 'transMonitor') {
 				generateTrans(secondGuidePanel);
-			}else if(node.text == "<font size = '2px' style='margin-left:9px;'>定时调度管理</font>") {
+			}else if(alias == 'schedulerMonitor') {
 				generateSchedulerMonitorPanel(secondGuidePanel);
-			}else if(node.text=="<font size = '2px' style='margin-left:9px;'>任务监控</font>"){
+			}else if(alias == 'taskMonitoring'){
 				secondGuidePanel.removeAll(true);
 				secondGuidePanel.add(showTaskControlPanel());
 				secondGuidePanel.doLayout();
 				timeIntervalByTaskControl=setInterval("refreshControlPanel()",5000);
-			}else if(node.text=="<font size = '2px' style='margin-left:9px;'>节点管理</font>"){
+			}else if(alias == 'slaveMonitor'){
 				slaveManager(secondGuidePanel);
-			}else if(node.text=="<font size = '2px' style='margin-left:9px;'>节点监控</font>"){
+			}else if(alias == 'slaveMonitoring'){
 				showSlaveMonitorPanel(secondGuidePanel);
-			}else if(node.text=="<font size = '2px' style='margin-left:9px;'>任务组管理</font>"){
+			}else if(alias == 'taskGroupMonitor'){
 				showTaskGroupPanel(secondGuidePanel);
-			}else if(node.text=="<font size = '2px' style='margin-left:9px;'>用户管理</font>"){
+			}else if(alias == 'userMonitor'){
 				showUserPanel(secondGuidePanel);
-			}else if(node.text=="<font size = '2px' style='margin-left:9px;'>用户组管理</font>"){
+			}else if(alias == 'userGroupMonitor'){
 				generateUserGroupPanel(secondGuidePanel);
-			}else if(node.text=="<font size = '2px' style='margin-left:9px;'>任务历史日志</font>"){
+			}else if(alias == 'taskLog'){
 				showHistoryLogPanel(secondGuidePanel);
-			}else if(node.text=="<font size = '2px' style='margin-left:9px;'>平台概况</font>"){
+			}else if(alias == 'platformMonitor'){
 				showModuleView(secondGuidePanel);
-			}
-			if(node.id=="dataStatistics"){
+			} else if(alias == 'dataStatistics'){
 				totalView(secondGuidePanel);
 				//showDataStatisticsFailureJob(secondGuidePanel);
 				//showDataStatisticsVolatilityView(secondGuidePanel)
 				//showDataStatisticsTenView(secondGuidePanel)
 				//showDataStatistics30View(secondGuidePanel);
+			} else if(alias == 'resourceApplication') {//申请
+				showApplicationPanel(secondGuidePanel);
+			} else if(alias == 'resourceApproval') {//审批
+				new Ext.data.JsonStore({
+					storeId: 'taskUserStore',
+					fields: ['id', 'name'],
+					proxy: new Ext.data.HttpProxy({
+						url: '/dataPush/getUsers.do',
+						method: 'POST'
+					})
+				}).load();
+				showApprovalPanel(secondGuidePanel);
 			}
 		});
 
@@ -657,76 +558,3 @@ function trimTxt(txt){
 	return txt.replace(/(^\s*)|(\s*$)/g, "");
 }
 
-//  TransGuide = Ext.extend(Ext.Panel, {
-// //     activeTab: 0,
-// //     plain: true,
-// 	 layout: 'border',
-//
-//      initComponent: function() {
-//
-//      	var transComponentTree = new Ext.tree.TreePanel({
-//      		region: 'west',
-//      		split: true,
-//      		width: 200,
-//
-//      		title: '核心对象',
-//      		useArrows: true,
-//      		root: new Ext.tree.AsyncTreeNode({text: 'root'}),
-//      		loader: new Ext.tree.TreeLoader({
-//      			dataUrl: GetUrl('system/steps.do')
-//      		}),
-//      		enableDD:true,
-//      		ddGroup:'TreePanelDDGroup',
-//      		autoScroll: true,
-//      		animate: false,
-//      		rootVisible: false
-//      	});
-//
-// //     	var jobComponentTree = new Ext.tree.TreePanel({
-// //     		title: '核心对象',
-// //     		useArrows: true,
-// //     		root: new Ext.tree.AsyncTreeNode({text: 'root'}),
-// //     		loader: new Ext.tree.TreeLoader({
-// //     			dataUrl: GetUrl('system/jobentrys.do')
-// //     		}),
-// //     		enableDD:true,
-// //     		ddGroup:'TreePanelDDGroup',
-// //     		autoScroll: true,
-// //     		animate: false,
-// //     		rootVisible: false
-// //     	});
-// //     	this.activeCom = function(item) {
-// //     		this.remove(transComponentTree, false);
-// //     		this.remove(jobComponentTree, false);
-// //     		jobComponentTree.hide();
-// //     		transComponentTree.hide();
-// //
-// //     		if(item && item.getXType() == 'JobGraph') {
-// //     			jobComponentTree.show();
-// //     			this.add(jobComponentTree);
-// //     			this.setActiveTab(jobComponentTree.getId());
-// //     		} else if(item && item.getXType() == 'TransGraph') {
-// //     			transComponentTree.show();
-// //     			this.add(transComponentTree);
-// //     			this.setActiveTab(transComponentTree.getId());
-// //     		}
-// //     	};
-//
-// //         jobComponentTree.on("nodedragover", function(e){
-// //         	return false;
-// //         });
-//
-// //         transComponentTree.on("nodedragover", function(e){
-// //         	return false;
-// //         });
-//
-// //         var repositoryTree = new RepositoryManageTree({title: '资源库'});
-//
-//          this.items = [transComponentTree, {
-//
-//          }];
-//
-//          TransGuide.superclass.initComponent.call(this);
-//
-//      }
-//  });

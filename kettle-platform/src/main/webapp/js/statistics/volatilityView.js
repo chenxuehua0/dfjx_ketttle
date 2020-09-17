@@ -104,6 +104,13 @@ function moduleViewVolatility(deptVal, text) {
 			axisTick : {
 				show : false
 			},
+			splitLine : {
+				show : true,
+				lineStyle : {
+					type : 'dashed',
+					color : '#eee'
+				}
+			}
 		},
 		series : [ {
 			type : 'line',

@@ -367,6 +367,7 @@ public class TransMetaCodec extends BaseGraphCodec {
 		
 		JSONObject jsonObject = JSONObject.fromObject(root.getAttribute("transLogTable"));
 		TransLogTable transLogTable = transMeta.getTransLogTable();
+		//日志表
 		transLogTable.setConnectionName(jsonObject.optString("connection"));
 		transLogTable.setSchemaName(jsonObject.optString("schema"));
 		transLogTable.setTableName(jsonObject.optString("table"));

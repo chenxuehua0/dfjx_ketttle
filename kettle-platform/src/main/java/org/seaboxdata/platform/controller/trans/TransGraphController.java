@@ -166,8 +166,7 @@ public class TransGraphController {
         GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
         String xml = StringEscapeHelper.decode(graphXml);
         xml = this.dealXml(xml);
-        
-        //System.out.println(StringEscapeHelper.decode(graphXml));
+        System.out.println(xml);
         AbstractMeta transMeta = codec.decode(xml);
         repository = App.getInstance().getRepository();
         ObjectId existingId = repository.getTransformationID(transMeta.getName(), transMeta.getRepositoryDirectory());

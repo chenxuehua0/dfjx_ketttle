@@ -131,7 +131,7 @@ function moduleViewData30(deptVal) {
 			}
 		} ],
 		yAxis : [ {
-			name : '数据总量',
+			name : '数据总量(万条)',
 			splitLine : {
 				show : true,
 				lineStyle : {
@@ -152,7 +152,7 @@ function moduleViewData30(deptVal) {
 				formatter : '{value} '
 			}
 		}, {
-			name : '数据容量',
+			name : '数据容量(G)',
 			nameLocation : 'middle',
 			nameTextStyle : {
 				padding : [ 50, 4, 5, 6 ]

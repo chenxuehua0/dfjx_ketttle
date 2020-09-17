@@ -16,6 +16,8 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
 
 	@Override
 	public List<Map<String, Object>> getDay30(String deptNm, String date) throws Exception {
+		
+		
 		return dataStatisticsDao.getDay30(deptNm, date);
 	}
 
@@ -45,8 +47,18 @@ public class DataStatisticsServiceImpl implements DataStatisticsService {
 	}
 
 	@Override
-	public List<Map<String, Object>> getFailureJob(String deptNm) throws Exception {
-		return dataStatisticsDao.getFailureJob(deptNm);
+	public List<Map<String, Object>> getFailureJob(String deptNm, String maxDate) throws Exception {
+		return dataStatisticsDao.getFailureJob(deptNm, maxDate);
+	}
+
+	@Override
+	public String getMaxDate(String deptNm) throws Exception {
+		return dataStatisticsDao.getMaxDate(deptNm);
+	}
+
+	@Override
+	public String get24MaxDate(String deptNm) throws Exception {
+		return dataStatisticsDao.get24MaxDate(deptNm);
 	}
 
 }

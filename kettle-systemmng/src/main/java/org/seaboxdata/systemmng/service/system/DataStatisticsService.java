@@ -19,5 +19,9 @@ public interface DataStatisticsService {
 
 	public List<Map<String, Object>> getDay5(String deptNm, String date) throws Exception;
 
-	public List<Map<String, Object>> getFailureJob(String deptNm) throws Exception;
+	public List<Map<String, Object>> getFailureJob(String deptNm, String maxDate) throws Exception;
+
+	public String getMaxDate(String deptNm) throws Exception;
+	
+	public String get24MaxDate(String deptNm) throws Exception;
 }

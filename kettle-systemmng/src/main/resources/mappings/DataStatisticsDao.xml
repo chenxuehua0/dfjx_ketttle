@@ -1,5 +1,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.seaboxdata.systemmng.dao.DataStatisticsDao">
+
+	<select id="getMaxDate" parameterType="String" resultType="String">
+		SELECT
+		    DATE_FORMAT(MAX(t.statt_dt), '%Y-%m-%d') statt_dt
+		FROM
+		    r_res_tbl_exchg_statt t
+		<where>
+			<if test='deptNm!=null and deptNm!=""' >
+		   		 t.dept_nm = #{deptNm}
+			</if>			
+		</where>
+	</select>
+	
+	<select id="get24MaxDate" parameterType="String" resultType="String">
+		SELECT
+		    DATE_FORMAT(MAX(t.statt_dt), '%Y-%m-%d') statt_dt
+		FROM
+		    r_24_hr_fail_job_distr t
+		<where>
+			<if test='deptNm!=null and deptNm!=""' >
+		   		 t.dept_nm = #{deptNm}
+			</if>			
+		</where>
+	</select>	
+	
     <!--根据登录名查找用户-->
     <select id="getDay30" parameterType="String" resultType="java.util.HashMap">
 		SELECT
@@ -9,14 +34,14 @@
 				    t.dept_nm_desc                dept_nm_desc,
 				</when>
 				<otherwise >
-					"all"                dept_nm,
-					"全部"                                             dept_nm_desc,
+					"all"                         dept_nm,
+					"全部"                         dept_nm_desc,
 				</otherwise>
 			</choose>
-		    t.statt_dt                    statt_dt,
-		    SUM(tbl_data_qty )            tbl_data_qty,
-		    SUM(t.tbl_data_spa)           tbl_data_spa,
-		    SUM(t.tbl_day_data_exchg_qty) tbl_day_data_exchg_qty
+		    t.statt_dt                            statt_dt,
+		    ROUND(SUM(tbl_data_qty )/10000,2)     tbl_data_qty,
+		    ROUND(SUM(tbl_data_qty)/(1024*3),2)   tbl_data_spa,
+		    SUM(t.tbl_day_data_exchg_qty)         tbl_day_data_exchg_qty
 		FROM
 		    r_res_tbl_exchg_statt t
 		WHERE
@@ -131,7 +156,7 @@
 		    t.dept_nm,
 		    t.dept_nm_desc,
 		    date_format(t.statt_dt, '%Y-%m') statt_dt,
-		    SUM(t.tbl_data_qty)              tbl_data_qty
+		    ROUND(SUM(t.tbl_data_qty)/10000,2) tbl_data_qty
 		FROM
 		    r_res_tbl_exchg_statt t
 		WHERE
@@ -147,60 +172,47 @@
 	<select id="getFailureJob" parameterType="String" resultType="java.util.HashMap">
 		SELECT
 			<choose>
-				<when test='deptNm!=null and deptNm!=""' >
-				    k.dept_nm                     dept_nm,
-				    k.dept_nm_desc                dept_nm_desc,
-				</when>
-				<otherwise >
-					"all"                         dept_nm,
-					"全部"                         dept_nm_desc,
-				</otherwise>
+		        <when test='deptNm!=null and deptNm!=""' >
+		            a.dept_nm                     dept_nm,
+		            a.dept_nm_desc                dept_nm_desc,
+		        </when>
+		        <otherwise >
+	                "all"                         dept_nm,
+	                "全部"                         dept_nm_desc,
+		        </otherwise>
 			</choose>
-		    k.job_fail_hr,
-		    COUNT(1)                              fail_count
+		    a.time job_fail_hr ,
+		    COUNT(b.dept_nm)  fail_count
 		FROM
-		    r_24_hr_fail_job_distr k,
-		    (
-		        SELECT
-					<choose>
-						<when test='deptNm!=null and deptNm!=""' >
-						    t.dept_nm,
-						</when>
-						<otherwise >
-						</otherwise>
-					</choose>
-		            MAX(t.statt_dt) statt_dt
-		        FROM
-		            r_24_hr_fail_job_distr t
-					<choose>
-						<when test='deptNm!=null and deptNm!=""' >
-						    GROUP BY t.dept_nm
-						</when>
-						<otherwise >
-						</otherwise>
-					</choose>		            
-		        ) m
+		    r_dept_time a
+		LEFT JOIN
+		    r_24_hr_fail_job_distr b
+		ON
+		    b.statt_dt= str_to_date(#{maxDate},'%Y-%m-%d')
+		AND a.time=b.job_fail_hr
+		AND a.dept_nm=b.dept_nm
 		WHERE
-		    k.statt_dt = m.statt_dt
 		<choose>
-			<when test='deptNm!=null and deptNm!=""' >
-			    AND k.dept_nm = m.dept_nm
-			    and k.dept_nm = #{deptNm}
-			</when>
-			<otherwise >
-			</otherwise>
-		</choose>			    
+	        <when test='deptNm!=null and deptNm!=""' >
+	            a.dept_nm = #{deptNm}
+	        </when>
+	        <otherwise >
+	        	1 = 1
+	        </otherwise>
+		</choose>			
 		GROUP BY
+		    
 		<choose>
-			<when test='deptNm!=null and deptNm!=""' >
-			    k.dept_nm_desc,
-		    	k.dept_nm,
-			</when>
-			<otherwise >
-			</otherwise>
-		</choose>		
-		    k.job_fail_hr
-		ORDER BY
-		    k.job_fail_hr
+	        <when test='deptNm!=null and deptNm!=""' >
+	            a.dept_nm_desc,
+	        	a.dept_nm,
+	        </when>
+	        <otherwise >
+	        </otherwise>
+		</choose>
+			a.time
+		order by 
+			a.time
+
 	</select>
 </mapper>

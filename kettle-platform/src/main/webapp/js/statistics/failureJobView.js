@@ -100,6 +100,13 @@ function moduleViewFailureJob(text, deptVal) {
 		},
 		yAxis : {
             name: '次',
+			splitLine : {
+				show : true,
+				lineStyle : {
+					type : 'dashed',
+					color : '#eee'
+				}
+			},
 			axisLine : {
 				show : false
 			},

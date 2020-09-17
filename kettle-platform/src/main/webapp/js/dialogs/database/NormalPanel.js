@@ -59,9 +59,10 @@
 			accessBox.getStore().load();
 		});
 		accessBox.getStore().on('load', function(store, records,  successful,  eOpts ) {
-			if(records.length>0){
-				accessBox.setValue(records[0].get('value'));
-			}
+			accessBox.setValue(this.dbinfo.access);
+//			if(records.length>0){
+//				accessBox.setValue(this.dbinfo.access);
+//			}
 		}, this);
 		
 		accessBox.on('selectionchange', function() {

@@ -42,9 +42,11 @@ public class DataStatisticsController {
     protected void getDay30(HttpServletResponse response,HttpServletRequest request) throws Exception{
         try{
             String deptNm = request.getParameter("deptNm");
-			String date = StringDateUtil.getSystemTime();;
+			String date = StringDateUtil.getSystemTime();
 			
-            List<Map<String, Object>> list=dataStatisticsService.getDay30(deptNm, date);
+			String maxDate = dataStatisticsService.getMaxDate(deptNm);
+			
+            List<Map<String, Object>> list=dataStatisticsService.getDay30(deptNm, maxDate);
 
             List<Object> dateList = new ArrayList<Object>();
             List<Map<String, Object>> qtyList = new ArrayList<Map<String, Object>>();
@@ -95,8 +97,8 @@ public class DataStatisticsController {
         try{
             String deptNm = request.getParameter("deptNm");
 			String date = StringDateUtil.getSystemTime();
-			
-			List<Map<String, Object>> list = dataStatisticsService.getDay5(deptNm, date);
+			String maxDate = dataStatisticsService.getMaxDate(deptNm);
+			List<Map<String, Object>> list = dataStatisticsService.getDay5(deptNm, maxDate);
 
             List<Object> xcategoryList = new ArrayList<Object>();
             List<Object> lowList = new ArrayList<Object>();
@@ -126,8 +128,8 @@ public class DataStatisticsController {
     protected void getFailureJob(HttpServletResponse response,HttpServletRequest request) throws Exception{
         try{
             String deptNm = request.getParameter("deptNm");
-			
-			List<Map<String, Object>> list = dataStatisticsService.getFailureJob(deptNm);
+            String maxDate = dataStatisticsService.get24MaxDate(deptNm);
+			List<Map<String, Object>> list = dataStatisticsService.getFailureJob(deptNm, maxDate);
 
             List<Object> dataAxisList = new ArrayList<Object>();
             List<Object> dataList = new ArrayList<Object>();
@@ -156,12 +158,12 @@ public class DataStatisticsController {
     @ResponseBody
     protected void getDataTen(HttpServletResponse response,HttpServletRequest request) throws Exception{
         try{
-			
 			String date = StringDateUtil.getSystemTime();
 			
-            List<Map<String, Object>> currentLlist=dataStatisticsService.getCurrentTen(date);
-            List<Map<String, Object>> lastMonthLlist=dataStatisticsService.getLastMonthTen(date);
-            List<Map<String, Object>> twoMonthesAgoList=dataStatisticsService.getTwoMonthesAgoTen(date);
+			String maxDate = dataStatisticsService.getMaxDate("");
+            List<Map<String, Object>> currentLlist=dataStatisticsService.getCurrentTen(maxDate);
+            List<Map<String, Object>> lastMonthLlist=dataStatisticsService.getLastMonthTen(maxDate);
+            List<Map<String, Object>> twoMonthesAgoList=dataStatisticsService.getTwoMonthesAgoTen(maxDate);
 
             List<Object> yearsList = new ArrayList<Object>();
             List<Object> jdDataList = new ArrayList<Object>();

@@ -79,6 +79,9 @@ public class LoginFilter implements Filter{
             if(excludePage.equals(request.getServletPath())){
                 isExclude=true;
             }
+            if(request.getServletPath().startsWith("/api")) {
+            	 isExclude=true;
+            }
         }
 
         if (!isExclude) {

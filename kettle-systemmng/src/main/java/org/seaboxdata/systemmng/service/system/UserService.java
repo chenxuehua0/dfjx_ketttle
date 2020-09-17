@@ -1,5 +1,6 @@
 package org.seaboxdata.systemmng.service.system;
 
+import org.seaboxdata.systemmng.entity.ResourceEntity;
 import org.seaboxdata.systemmng.entity.UserEntity;
 import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
 
@@ -29,4 +30,6 @@ public interface UserService {
     public List<UserEntity> getUsers(String userGroupName) throws Exception;
 
     public void updatePassword(UserEntity user) throws Exception;
+
+	public List<ResourceEntity> queryResource(String userName) throws Exception;
 }

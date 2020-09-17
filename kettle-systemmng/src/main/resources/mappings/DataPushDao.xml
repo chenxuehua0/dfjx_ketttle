@@ -1,0 +1,288 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.seaboxdata.systemmng.dao.DataPushDao">
+    <!--根据登录名查找用户-->
+    <select id="getList" parameterType="String" resultType="java.util.HashMap">
+		SELECT
+		    t.ID,
+		    t.NAME,
+		    t.SOURCE_DATA_NAME,
+		    t.SOURCE_TABLE_NAME,
+		    t.TARGET_DATA_NAME,
+		    t.TARGET_TABLE_NAME,
+		    t.STATUS,
+		    CASE
+		        WHEN t.STATUS = '0'
+		        THEN '待提交'
+		        WHEN t.STATUS = '1'
+		        THEN '待审核'
+		        WHEN t.STATUS = '2'
+		        THEN '审核通过'
+		        WHEN t.STATUS = '3'
+		        THEN '驳回'
+		        ELSE ''
+		    END STATUS_NAME,		    
+		    t.DESCRIPTION,
+		    t.USER_GROUP_ID,
+		    c.USER_GROUP_NAME,
+		    t.CREATE_USER,
+		    a.NAME                                          CREATE_USER_NAME,
+		    DATE_FORMAT(t.CREATE_DATE, '%Y-%m-%d %H:%i:%s')      CREATE_DATE,
+		    DATE_FORMAT(t.APPLICATION_DATE, '%Y-%m-%d %H:%i:%s') APPLICATION_DATE,
+		    t.APPROVAL_USER,
+		    b.NAME                                            APPROVAL_USER_NAME,
+		    DATE_FORMAT(t.APPROVAL_DATE, '%Y-%m-%d %H:%i:%s') APPROVAL_DATE
+		FROM
+		    r_data_push_service t
+		LEFT JOIN
+		    r_user a
+		ON
+		    t.CREATE_USER = a.ID_USER
+		LEFT JOIN
+		    r_user b
+		ON
+		    t.APPROVAL_USER = b.ID_USER
+		LEFT JOIN
+		    d_user_group c
+		ON
+		    t.USER_GROUP_ID = c.ID_USER_GROUP
+		WHERE
+		    t.USER_GROUP_ID = #{userGroupName}
+		<if test='status != null and status != ""'>
+			AND t.STATUS = #{status}
+		</if>
+		<if test='name != null and name != ""'>
+			AND t.name like concat('%',#{name},'%')
+		</if>
+        <if test='userType != 1'>
+            AND t.CREATE_USER = #{username}
+        </if>
+        ORDER BY
+    		t.STATUS ASC,
+    		t.CREATE_DATE DESC
+     	limit 
+     		#{start},#{limit}
+    </select>
+
+    <!--获取用户的总数量-->
+    <select id="getCount" resultType="java.lang.Integer">
+		SELECT
+		    count(1)
+		FROM
+		    r_data_push_service t
+		WHERE
+		    t.USER_GROUP_ID = #{userGroupName}
+		<if test='status != null and status != ""'>
+			AND t.STATUS = #{status}
+		</if>    
+		<if test='name != null and name != ""'>
+			AND t.name = concat('%',#{name},'%')
+		</if>
+        <if test='userType != 1'>
+            AND t.CREATE_USER = #{username}
+        </if>
+    </select>
+    
+    <!--  -->
+    <select id="queryByParams" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+		SELECT
+		    ID,
+		    NAME,
+		    SOURCE_DATA_NAME,
+		    SOURCE_TABLE_NAME,
+		    TARGET_DATA_NAME,
+		    TARGET_TABLE_NAME,
+		    STATUS,
+		    DESCRIPTION,
+		    USER_GROUP_ID,
+		    CREATE_USER,
+		    CREATE_DATE,
+		    APPLICATION_DATE,
+		    APPROVAL_USER,
+		    APPROVAL_DATE
+		FROM
+		    r_data_push_service t
+		<where>
+			<if test="name != null and name !='' ">
+			    t.name = #{name}    
+			</if>	
+			<if test="id != null and id != '' ">
+			   and t.id = #{id}    
+			</if>		
+		</where>
+    </select>
+    
+   <!--根据登录名查找用户-->
+    <select id="getApprovalList" parameterType="String" resultType="java.util.HashMap">
+		SELECT
+		    t.ID,
+		    t.NAME,
+		    t.SOURCE_DATA_NAME,
+		    t.SOURCE_TABLE_NAME,
+		    t.TARGET_DATA_NAME,
+		    t.TARGET_TABLE_NAME,
+		    t.STATUS,
+		    CASE
+		        WHEN t.STATUS = '0'
+		        THEN '待提交'
+		        WHEN t.STATUS = '1'
+		        THEN '待审核'
+		        WHEN t.STATUS = '2'
+		        THEN '审核通过'
+		        WHEN t.STATUS = '3'
+		        THEN '驳回'
+		        ELSE ''
+		    END STATUS_NAME,		    
+		    t.DESCRIPTION,
+		    t.USER_GROUP_ID,
+		    c.USER_GROUP_NAME,
+		    t.CREATE_USER,
+		    a.NAME                                          CREATE_USER_NAME,
+		    DATE_FORMAT(t.CREATE_DATE, '%Y-%m-%d %H:%i:%s')      CREATE_DATE,
+		    DATE_FORMAT(t.APPLICATION_DATE, '%Y-%m-%d %H:%i:%s') APPLICATION_DATE,
+		    t.APPROVAL_USER,
+		    b.NAME                                            APPROVAL_USER_NAME,
+		    DATE_FORMAT(t.APPROVAL_DATE, '%Y-%m-%d %H:%i:%s') APPROVAL_DATE
+		FROM
+		    r_data_push_service t
+		LEFT JOIN
+		    r_user a
+		ON
+		    t.CREATE_USER = a.ID_USER
+		LEFT JOIN
+		    r_user b
+		ON
+		    t.APPROVAL_USER = b.ID_USER
+		LEFT JOIN
+		    d_user_group c
+		ON
+		    t.USER_GROUP_ID = c.ID_USER_GROUP
+		WHERE
+		    t.USER_GROUP_ID = #{userGroupName}
+		AND 
+			t.STATUS in (1,2,3)
+		<if test='status != null and status != ""'>
+			AND t.STATUS = #{status}
+		</if>
+		<if test='name != null and name != ""'>
+			AND t.name like concat('%',#{name},'%')
+		</if>
+        <if test='userId != null and userId != ""'>
+            AND t.CREATE_USER = #{userId}
+        </if>
+        ORDER BY
+    		t.STATUS ASC,
+    		t.CREATE_DATE DESC
+     	limit 
+     		#{start},#{limit}
+    </select>    
+    
+    <!--获取用户的总数量-->
+    <select id="getApprovalCount" resultType="java.lang.Integer">
+		SELECT
+		    count(1)
+		FROM
+		    r_data_push_service t
+		WHERE
+		    t.USER_GROUP_ID = #{userGroupName}
+		AND 
+			t.STATUS in (1,2,3)		    
+		<if test='status != null and status != ""'>
+			AND t.STATUS = #{status}
+		</if>    
+		<if test='name != null and name != ""'>
+			AND t.name = concat('%',#{name},'%')
+		</if>
+        <if test='userId != null and userId != ""'>
+            AND t.CREATE_USER = #{userId}
+        </if>
+    </select>    
+    
+    <!--  -->
+    <insert id="add" parameterType="java.util.HashMap">
+		INSERT INTO r_data_push_service
+		    (
+		        NAME,
+		        SOURCE_DATA_NAME,
+		        SOURCE_TABLE_NAME,
+		        TARGET_DATA_NAME,
+		        TARGET_TABLE_NAME,
+		        STATUS,
+		        DESCRIPTION,
+		        USER_GROUP_ID,
+		        CREATE_USER,
+		        CREATE_DATE
+		    )
+		    VALUES
+		    (
+		        #{name},
+		        #{sourceData},
+		        #{sourceTable},
+		        #{targetData},
+		        #{targetTable},
+		        0,
+		        #{desc},
+		        #{userGroupId},
+		        #{createUser},
+		        now()
+		    )    
+    </insert>
+    
+    <!--  -->
+    <delete id="delete" parameterType="java.util.HashMap">
+		DELETE
+		FROM
+		    r_data_push_service
+		WHERE
+		    ID = #{id}
+    </delete>
+    
+    <!--  -->
+    <update id="update" parameterType="java.util.HashMap">
+		UPDATE
+		    r_data_push_service
+		SET
+		    NAME = #{name},
+		    SOURCE_DATA_NAME = #{source_data_name},
+		    SOURCE_TABLE_NAME = #{source_table_name},
+		    TARGET_DATA_NAME = #{target_data_name},
+		    TARGET_TABLE_NAME = #{target_table_name},
+		    DESCRIPTION = #{description}
+		WHERE
+		    ID = #{id}
+    </update>
+    
+    <!--  -->
+    <update id="operateStatus" parameterType="java.util.HashMap">
+		UPDATE
+		    r_data_push_service
+		<set>
+			status = #{status},
+			<if test="application_date!= null and application_date != '' ">  
+	            application_date = STR_TO_DATE(#{application_date}, '%Y-%m-%d %H:%i:%s'),  
+	        </if>  		
+			<if test="approval_date!= null and approval_date != '' ">  
+	            approval_date = STR_TO_DATE(#{approval_date}, '%Y-%m-%d %H:%i:%s'),  
+	        </if>  		
+			<if test="approval_user!= null and approval_user != '' ">  
+	            approval_user = #{approval_user},  
+	        </if>  		
+		</set>
+		WHERE
+		    ID = #{id}    
+    </update>
+    
+    <!--  -->
+    <select id="getUsers" parameterType="String" resultType="java.util.HashMap">
+		SELECT
+		    ID_USER id,
+		    NAME    name
+		FROM
+		    r_user t,
+		    d_user_group_member_attribute a,
+		    d_user_group b
+		WHERE
+		    t.LOGIN = a.USER_NAME
+		AND a.USER_GROUP_NAME = b.USER_GROUP_NAME
+		AND b.ID_USER_GROUP = #{userGorupId}
+    </select>
+</mapper>
