@@ -75,7 +75,7 @@ public class TaskGroupServiceImpl implements TaskGroupService{
         UserGroupAttributeEntity attr=(UserGroupAttributeEntity)request.getSession().getAttribute("userInfo");
         String userGroupName=attr.getUserGroupName();
         //添加用户组-任务组关系表记录 如果用户组名不为空则代表不是admin用户 默认该用户组可见
-        if(!StringDateUtil.isEmpty(userGroupName)){
+        if(!StringDateUtil.isEmpty(userGroupName) && !"Pristin".equals(userGroupName)){
             TaskUserRelationEntity ur=new TaskUserRelationEntity();
             ur.setUserGroupName(userGroupName);
             ur.setTaskGroupName(taskGroupName);
