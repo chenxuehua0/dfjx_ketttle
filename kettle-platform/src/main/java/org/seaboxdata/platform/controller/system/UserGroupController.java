@@ -1,11 +1,12 @@
 package org.seaboxdata.platform.controller.system;
 
-import net.sf.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.seaboxdata.systemmng.entity.SlaveEntity;
 import org.seaboxdata.systemmng.entity.TaskGroupEntity;
 import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
@@ -14,12 +15,13 @@ import org.seaboxdata.systemmng.service.system.SlaveService;
 import org.seaboxdata.systemmng.service.system.TaskGroupService;
 import org.seaboxdata.systemmng.service.system.UserGroupService;
 import org.seaboxdata.systemmng.utils.task.MD5Util;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
+import net.sf.json.JSONObject;
 
 /**
  * Created by cRAZY on 2017/4/13.
@@ -350,4 +352,44 @@ public class UserGroupController {
             throw new Exception(e.getMessage());
         }
     }
+    
+    /**
+     * 任务组
+     * @param response
+     * @param request
+     * @throws Exception
+     */
+    @RequestMapping(value="/getTaskGroupSelect")
+    @ResponseBody
+    protected void getTaskGroupSelect(HttpServletResponse response,HttpServletRequest request) throws Exception{
+        try{
+            StringBuffer sbf=new StringBuffer("[");
+            
+            String userGroup = request.getParameter("userGroup");
+            
+            List<Map<String,Object>> items=userGroupService.getTaskGroupByUserGroup(userGroup);
+            for(int i=0;i<items.size();i++){
+                String thisJson="";
+                String _id="\""+items.get(i).get("ID_TASK_GROUP")+"\"";
+                String val="\""+items.get(i).get("TASK_GROUP_NAME")+"\"";
+                String id="\""+"id"+"\"";
+                String name="\""+"name"+"\"";
+				if (i != items.size() - 1) {
+					thisJson = "{" + id + ":" + _id + "," + name + ":" + val + "},";
+				} else {
+					thisJson = "{" + id + ":" + _id + "," + name + ":" + val + "}";
+				}
+                sbf.append(thisJson);
+            }
+            sbf.append("]");
+            response.setContentType("text/html;charset=utf-8");
+            PrintWriter out=response.getWriter();
+            out.write(sbf.toString());
+            out.flush();
+            out.close();
+        }catch(Exception e){
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
+    }     
 }

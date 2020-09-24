@@ -3,6 +3,7 @@ package org.seaboxdata.systemmng.service.system;
 import org.seaboxdata.systemmng.entity.UserGroupEntity;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cRAZY on 2017/4/13.
@@ -27,5 +28,7 @@ public interface UserGroupService {
     public void deleteUserGroup(String userGroupName) throws Exception;
 
     public List<UserGroupEntity> getAllUserGroup() throws Exception;
+
+	public List<Map<String, Object>> getTaskGroupByUserGroup(String userGroup) throws Exception;
 
 }

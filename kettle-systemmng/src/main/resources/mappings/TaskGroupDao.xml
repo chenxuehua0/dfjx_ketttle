@@ -187,8 +187,16 @@
 
     <!--根据任务名 任务类型查找该任务所在的所有任务组-->
     <select id="getTaskGroupByTaskName" resultType="org.seaboxdata.systemmng.entity.TaskGroupAttributeEntity">
-      select  d.TASK_GROUP_NAME as taskGroupName from d_task_group_member_attribute d
-      where d.TASK_NAME=#{0} and d.TYPE=#{1}
+		SELECT
+		    d.TASK_GROUP_NAME AS taskGroupName,
+		    a.USER_GROUP_NAME as userGroupName
+		FROM
+		    d_task_group_member_attribute d,
+		    d_user_group_tasks_relation a
+		WHERE
+		    d.TASK_GROUP_NAME = a.TASK_GROUP_NAME
+		AND d.TASK_NAME=#{0}
+		AND d.TYPE=#{1}
     </select>
 
     <!--修改用户组-任务组关系表中的任务组名   不会单独调用,多用于与修改任务组的语句一起调用 -->

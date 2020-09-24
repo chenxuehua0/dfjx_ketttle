@@ -193,4 +193,19 @@
         </trim>
         WHERE USER_NAME=#{userName}
     </update>
+    
+    <!--  -->
+    <select id="getTaskGroupByUserGroup" resultType="java.util.HashMap">
+		SELECT
+		    t.ID_TASK_GROUP,
+		    t.TASK_GROUP_NAME,
+		    t.TASK_DESC,
+		    t.CREATE_DATE
+		FROM
+		    d_task_group t ,
+		    d_user_group_tasks_relation r
+		WHERE
+		    t.TASK_GROUP_NAME = r.TASK_GROUP_NAME
+		AND r.USER_GROUP_NAME = #{userGroup}  
+    </select>    
 </mapper>

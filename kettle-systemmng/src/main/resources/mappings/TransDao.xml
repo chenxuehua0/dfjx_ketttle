@@ -73,15 +73,28 @@
         left join r_user usr on j.CREATED_USER = usr.ID_USER
         left join r_user usr_m on j.MODIFIED_USER = usr_m.ID_USER
         where j.use_batchid='Y'
-        <if test='param5!=null and param5!="" and param5!="Pristin"' >
+        <if test='param5!=null and param5!=""' >
             AND j.`NAME` IN
             (
-                select  TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
-                (
-                    select TASK_GROUP_NAME from
-                    d_user_group_tasks_relation where USER_GROUP_NAME=#{4}
-                )
-                AND TYPE='trans'
+				SELECT DISTINCT
+				    TASK_NAME
+				FROM
+				    d_task_group_member_attribute t,
+				    d_task_group a
+				WHERE
+				    t.TYPE='trans'
+				AND t.TASK_GROUP_NAME = a.TASK_GROUP_NAME
+				<if test='param7!=null and param7!=""'>
+					AND a.ID_TASK_GROUP = #{6}
+				</if>
+				AND t.TASK_GROUP_NAME IN
+				    (
+				        SELECT
+				            TASK_GROUP_NAME
+				        FROM
+				            d_user_group_tasks_relation
+				        WHERE
+				            USER_GROUP_NAME=#{4} )
             )
         </if>
         <if test='param3!=null and param3!=""'  >
@@ -101,15 +114,28 @@
 
     <select id="conditionFindTransCount" resultType="java.lang.Integer">
         select count(1) from r_transformation j WHERE j.use_batchid='Y'
-        <if test='param3!=null and param3!="" and param3!="Pristin"'  >
+        <if test='param3!=null and param3!="" '  >
             AND j.`NAME` IN
             (
-                select DISTINCT TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
-                (
-                    select TASK_GROUP_NAME from
-                    d_user_group_tasks_relation where USER_GROUP_NAME=#{2}
-                )
-             AND TYPE='trans'
+				SELECT DISTINCT
+				    TASK_NAME
+				FROM
+				    d_task_group_member_attribute t,
+				    d_task_group a
+				WHERE
+				    t.TYPE='trans'
+				AND t.TASK_GROUP_NAME = a.TASK_GROUP_NAME
+				<if test='param5!=null and param5!=""'>
+					AND a.ID_TASK_GROUP = #{4}
+				</if>
+				AND t.TASK_GROUP_NAME IN
+				    (
+				        SELECT
+				            TASK_GROUP_NAME
+				        FROM
+				            d_user_group_tasks_relation
+				        WHERE
+				            USER_GROUP_NAME=#{2} )
             )
         </if>
         <if test='param1!=null and param1!=""'>

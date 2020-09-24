@@ -10,7 +10,15 @@ public class TaskGroupAttributeEntity {
     private Integer taskId;
     private String taskName;
     private String taskPath;
+    private String userGroupName;
+    
+    public String getUserGroupName() {
+		return userGroupName;
+	}
 
+	public void setUserGroupName(String userGroupName) {
+		this.userGroupName = userGroupName;
+	}
     public Integer getGroupAttributeId() {
         return groupAttributeId;
     }

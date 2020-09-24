@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import org.seaboxdata.systemmng.entity.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cRAZY on 2017/4/13.
@@ -69,4 +70,6 @@ public interface UserGroupDao {
 
     //根据用户名删除用户用户成员表中的记录
     public void deleteUserAttributeByName(String username);
+
+	public List<Map<String, Object>> getTaskGroupByUserGroup(String userGroup);
 }

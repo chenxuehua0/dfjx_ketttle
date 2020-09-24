@@ -12,6 +12,7 @@ import org.seaboxdata.systemmng.entity.UserGroupEntity;
 import org.seaboxdata.systemmng.service.system.UserGroupService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cRAZY on 2017/4/13.
@@ -183,6 +184,11 @@ public class UserGroupServiceImpl implements UserGroupService{
     public  List<UserGroupEntity> getAllUserGroup() throws Exception{
        return userGroupDao.allUserGroup();
     }
+
+	@Override
+	public List<Map<String, Object>> getTaskGroupByUserGroup(String userGroup) throws Exception {
+		return userGroupDao.getTaskGroupByUserGroup(userGroup);
+	}
 
 
 }

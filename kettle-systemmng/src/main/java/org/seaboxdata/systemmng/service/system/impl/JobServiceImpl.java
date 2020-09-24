@@ -107,14 +107,14 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public JSONObject findJobs(int start, int limit, String name, String createDate,String userGroupName, String username, String selectUsergroup) throws Exception{
+    public JSONObject findJobs(int start, int limit, String name, String createDate,String userGroupName, String username,String taskGroup) throws Exception{
         PageforBean pages=new PageforBean();
         net.sf.json.JSONObject result=null;
         //该页的作业信息以及整个表(可能是条件查询)的总记录条数
         List<JobEntity> jobs=null;
         Integer totalCount=0;
-        if (StringDateUtil.isEmpty(selectUsergroup) && StringDateUtil.isEmpty(name) && StringDateUtil.isEmpty(createDate)  && StringDateUtil.isEmpty(username)){
-          jobs=jobDao.getThisPageJob(start,limit,userGroupName);
+        if (StringDateUtil.isEmpty(userGroupName) && StringDateUtil.isEmpty(taskGroup) && StringDateUtil.isEmpty(name) && StringDateUtil.isEmpty(createDate)  && StringDateUtil.isEmpty(username)){
+          jobs=jobDao.getThisPageJob(start,limit, userGroupName);
             //对日期进行处理转换成指定的格式
             for (JobEntity job:jobs){
                 job.setCreateDate(format.parse(format.format(job.getCreateDate())));
@@ -125,12 +125,12 @@ public class JobServiceImpl implements JobService{
 			/*
 			 * if(!createDate.isEmpty()) createDate+=" 00:00:00";
 			 */
-            jobs=jobDao.conditionFindJobs(start, limit, name, createDate,userGroupName, username, selectUsergroup);
+            jobs=jobDao.conditionFindJobs(start, limit, name, createDate,userGroupName, username, taskGroup);
             for (JobEntity job:jobs){
                 job.setCreateDate(format.parse(format.format(job.getCreateDate())));
                 job.setModifiedDate(format.parse(format.format(job.getModifiedDate())));
             }
-            totalCount=jobDao.conditionFindJobCount(name,createDate,userGroupName, username, selectUsergroup);
+            totalCount=jobDao.conditionFindJobCount(name,createDate,userGroupName, username, taskGroup);
         }
 
         //设置作业的全目录名
@@ -152,6 +152,8 @@ public class JobServiceImpl implements JobService{
                     }
                     job.setBelongToTaskGroup(belongToTaskGroup);
                 }
+                
+                job.setBelongToUserGroup(items.get(0).getUserGroupName());
             }
         }
 

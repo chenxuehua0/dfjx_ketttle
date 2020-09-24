@@ -246,13 +246,20 @@ public class TaskController {
 			String createDate = request.getParameter("date");
 			String selectUsergroup = request.getParameter("usergroup");
 			String username = request.getParameter("username");
+
+			String taskGroup = request.getParameter("taskGroup");
 			// 获取当前用户所在的用户组
 			UserGroupAttributeEntity attr = (UserGroupAttributeEntity) request.getSession().getAttribute("userInfo");
 			String userGroupName = "";
 			if (null != attr ) {
-				userGroupName = attr.getUserGroupName();
+				if (null != attr) {
+					userGroupName = attr.getUserGroupName();
+					if("Pristin".equals(userGroupName)) {
+						userGroupName = selectUsergroup;
+					}
+				}
 			}
-			JSONObject result = jobService.findJobs(start, limit, name, createDate, userGroupName, username, selectUsergroup);
+			JSONObject result = jobService.findJobs(start, limit, name, createDate, userGroupName, username, taskGroup);
 
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter out = response.getWriter();
@@ -297,6 +304,7 @@ public class TaskController {
 			String createDate = request.getParameter("date");
 			String selectGroup = request.getParameter("usergroup");
 			String username = request.getParameter("username");
+			String taskGroup = request.getParameter("taskGroup");
 			// 获取当前用户所在的用户组
 			UserGroupAttributeEntity attr = (UserGroupAttributeEntity) request.getSession().getAttribute("userInfo");
 			String userGroupName = "";
@@ -305,15 +313,10 @@ public class TaskController {
 				userGroupName = attr.getUserGroupName();
 				if("Pristin".equals(userGroupName)) {
 					userGroupName = selectGroup;
-				} else {
-					if(!StringUtils.isEmpty(selectGroup) && !userGroupName.equals(selectGroup)) {
-						//不查询数据
-						userGroupName = "!";
-					}
 				}
 			}
 
-			JSONObject result = transService.findTrans(start, limit, transName, createDate, userGroupName, username);
+			JSONObject result = transService.findTrans(start, limit, transName, createDate, userGroupName, username, taskGroup);
 			// 输出结果返回给客户端
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter out = response.getWriter();

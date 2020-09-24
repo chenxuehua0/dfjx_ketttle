@@ -18,7 +18,16 @@ public class JobEntity {
     private Integer directoryId;// 作业所在的目录的id,与层级目录表的id对应,用于标识该作业是存放在哪个目录,根目录是/
     private String directoryName;   //作业的完整目录名
     private String belongToTaskGroup;   //所属任务组 多个以逗号形式分隔
+    private String belongToUserGroup;   //所属用户组
 
+    public String getBelongToUserGroup() {
+		return belongToUserGroup;
+	}
+
+	public void setBelongToUserGroup(String belongToUserGroup) {
+		this.belongToUserGroup = belongToUserGroup;
+	}
+	
     public String getBelongToTaskGroup() {
         return belongToTaskGroup;
     }

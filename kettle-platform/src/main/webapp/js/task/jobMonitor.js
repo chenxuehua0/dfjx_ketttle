@@ -10,14 +10,15 @@ function generateJobPanel(secondGuidePanel){
         {header:"id",dataIndex:"jobId",align:"center"},
         {header:"目录",width:150,dataIndex:"directoryName",align:"center"},
         {header:"名字",width:150,dataIndex:"name",align:"center"},
+        {header:"所属用户组",dataIndex:"belongToUserGroup",align:"center"},
+        {header:"所属任务组",dataIndex:"belongToTaskGroup",align:"center"},
         {header:"创建用户",width:100,dataIndex:"createUser",align:"center"},
         {header:"创建时间",width:130,dataIndex:"createDate",tooltip:"这是创建时间",format:"y-M-d H:m:s",align:"center"},
         {header:"最终修改者",width:100,dataIndex:"modifiedUser",align:"center"},
         {header:"修改时间",width:130,dataIndex:"modifiedDate",format:"y-M-d H:m:s",align:"center"},
-        {header:"所属任务组",dataIndex:"belongToTaskGroup",align:"center"},
         {header:"操作",width:280,dataIndex:"",menuDisabled:true,align:"center",
             renderer:function(v){
-                // if(loginUserTaskGroupPower==1 || loginUserName=="sdsjfzj_cqdc"){
+                // if(loginUserTaskGroupPower==1 || belongToUserGroup!="Pristin"){
                     return "<img src='../../ui/images/i_delete.png' class='imgCls' onclick='deleteJobByJobPath()' title='删除作业'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_detail.png' class='imgCls' onclick='showOneJobDetail()' title='作业属性'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_editor.png' class='imgCls' onclick='editorJob()' title='编辑'/>&nbsp;&nbsp;"+
@@ -48,7 +49,8 @@ function generateJobPanel(secondGuidePanel){
         {name:"createDate",type:"string",mapping:"createDate"},
         {name:"modifiedUser",type:"string",mapping:"modifiedUser"},
         {name:"modifiedDate",type:"string",mapping:"modifiedDate"},
-        {name:"belongToTaskGroup",type:"string",mapping:"belongToTaskGroup"}
+        {name:"belongToTaskGroup",type:"string",mapping:"belongToTaskGroup"},
+        {name:"belongToUserGroup",type:"string",mapping:"belongToUserGroup"}
     ])
     var reader=new Ext.data.JsonReader({totalProperty:"totalProperty",root:"root"},human);
 
@@ -72,15 +74,21 @@ function generateJobPanel(secondGuidePanel){
                 if(Ext.getCmp("jobUserGroupCombox"))
                 	usergroupTo=Ext.getCmp("jobUserGroupCombox").getValue();
                 
+                var taskGroupC = "";
+                if(Ext.getCmp("jobTaskGroupCombox"))
+                	taskGroupC=Ext.getCmp("jobTaskGroupCombox").getValue();
+                
                 store.baseParams = {
                     name:jobName,
                     date:createDate,
                     username:usernameTo,
-                    usergroup:usergroupTo
+                    usergroup:usergroupTo,
+                    taskGroup : taskGroupC
                 }
             }
         }
     })
+    
     store.load({params:{start:0,limit:15}});
 
     var inputJobName="";
@@ -112,8 +120,12 @@ function generateJobPanel(secondGuidePanel){
     var chooseUsergroup="";
     if(Ext.getCmp("jobUserGroupCombox"))
         chooseUsergroup=Ext.getCmp("jobUserGroupCombox").getValue();
-    
     var userGroupCom=jobUserGroupCombobox(chooseUsergroup);
+    
+    var chooseTaskGroup="";
+    if(Ext.getCmp("jobTaskGroupCombox"))
+    	chooseTaskGroup=Ext.getCmp("jobTaskGroupCombox").getValue();
+    var taskGroupCom=jobTaskGroupCombobox(chooseUsergroup, chooseTaskGroup);
     
     var inputUsername="";
     if(Ext.getCmp("userNameField"))
@@ -138,7 +150,7 @@ function generateJobPanel(secondGuidePanel){
         closable:true,
         tbar:new Ext.Toolbar({
             buttons:[
-                nameField ,"-",dateField,"-",userGroupCom,"-",usernameField,
+                nameField ,"-",dateField,"-",userGroupCom,"-",taskGroupCom, "-",usernameField,
                 {
                     iconCls:"searchCls",
                     tooltip: '查询',
@@ -157,8 +169,9 @@ function generateJobPanel(secondGuidePanel){
             //emptyMsg:"没有记录"
         })
     });
+    
     grid.getColumnModel().setHidden(2,true);
-    grid.getColumnModel().setHidden(9,true);
+ 
     secondGuidePanel.removeAll(true);
     secondGuidePanel.add(grid);
     secondGuidePanel.doLayout();
@@ -613,6 +626,64 @@ function updateJobName(){
     })
 }
 
+/**
+ * 
+ */
+function jobTaskGroupCombobox(userGroupCom, taskGroupName) {
+		if (userGroupCom == '') {
+			if (belongToUserGroup != 'Pristin') {
+				userGroupCom = belongToUserGroup;
+			}
+			
+			taskGroupName = '';
+		}
+
+		var proxy = new Ext.data.HttpProxy({
+			url : "/userGroup/getTaskGroupSelect.do"
+		});
+
+		var hostName = Ext.data.Record.create([
+		{
+			name : "id",
+			type : "String",
+			mapping : "id"
+		},
+		{
+			name : "name",
+			type : "String",
+			mapping : "name"
+		},
+	]);
+
+	var reader = new Ext.data.JsonReader({}, hostName);
+
+	var store = new Ext.data.Store({
+		proxy : proxy,
+		reader : reader,
+		baseParams : {
+			userGroup : userGroupCom
+		},
+	});
+
+	var taskGroupCom = new Ext.form.ComboBox({
+		id : "jobTaskGroupCombox",
+		triggerAction : "all",
+		store : store,
+		displayField : "name",
+		valueField : "id",
+		mode: 'local',
+		emptyText : "任务组选择",
+		disabled : false
+	});
+
+	store.load();
+	store.on("load", function () {
+		
+       taskGroupCom.setValue(taskGroupName);
+    })
+
+	return taskGroupCom;
+}
 
 //用户组选择下拉框
 function jobUserGroupCombobox(userGroupName){
@@ -642,8 +713,12 @@ function jobUserGroupCombobox(userGroupName){
       listeners:{
           //index是被选中的下拉项在整个列表中的下标 从0开始
           'select':function(combo,record,index){
-              var secondGuidePanel=Ext.getCmp("secondGuidePanel");
-              generateJobPanel(secondGuidePanel);
+        	  var s = Ext.getCmp('jobTaskGroupCombox');
+        	  s.store.baseParams.userGroup = combo.value;
+        	  s.store.load();
+        	  s.store.on("load", function () {
+        		  s.setValue('');
+	    	  });
           }
       }
   })

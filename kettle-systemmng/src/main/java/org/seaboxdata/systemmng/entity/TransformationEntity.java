@@ -17,7 +17,15 @@ public class TransformationEntity {
     private Integer directoryId;    //与层级目录表主键关联 代表该转换存放于哪个目录下
     private String directoryName;   //所在的直接父级目录名
     private String belongToTaskGroup;
+    private String belongToUserGroup;
 
+    public String getBelongToUserGroup() {
+		return belongToUserGroup;
+	}
+
+	public void setBelongToUserGroup(String belongToUserGroup) {
+		this.belongToUserGroup = belongToUserGroup;
+	}
     public String getBelongToTaskGroup() {
         return belongToTaskGroup;
     }

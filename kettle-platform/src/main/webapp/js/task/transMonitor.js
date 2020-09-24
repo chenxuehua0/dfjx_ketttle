@@ -9,14 +9,15 @@ function generateTrans(secondGuidePanel){
         {header:"转换ID",dataIndex:"transformationId",align:"center"},
         {header:"目录",width:150,dataIndex:"directoryName",align:"center"},
         {header:"转换名",width:150,dataIndex:"name",align:"center"},
+        {header:"所属用户组",dataIndex:"belongToUserGroup",align:"center"},
+        {header:"所属任务组",dataIndex:"belongToTaskGroup",align:"center"},
         {header:"创建用户",width:100,dataIndex:"createUser",align:"center"},
         {header:"创建时间",width:130,dataIndex:"createDate",tooltip:"这是创建时间",format:"y-M-d H:m:s",align:"center"},
         {header:"最终修改者",width:100,dataIndex:"modifiedUser",align:"center",align:"center"},
         {header:"修改时间",width:130,dataIndex:"modifiedDate",format:"y-M-d H:m:s",align:"center"},
-        {header:"所属任务组",dataIndex:"belongToTaskGroup",align:"center"},
         {header:"操作",width:280,dataIndex:"",menuDisabled:true,align:"center",
             renderer:function(v){
-                // if(loginUserTaskGroupPower==1 || loginUserName=="sdsjfzj_cqdc"){
+                if(loginUserTaskGroupPower==1 || belongToUserGroup=="Pristin"){
                     return "<img src='../../ui/images/i_detail.png' class='imgCls' onclick='showOneTransDetail()' title='查看转换属性'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_delete.png' class='imgCls' onclick='deleteTransByTransPath()' title='删除'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_editor.png' class='imgCls' onclick='editorTrans()' title='编辑'/>&nbsp;&nbsp;"+
@@ -24,12 +25,11 @@ function generateTrans(secondGuidePanel){
                         "<img src='../../ui/images/i_compositionImg.png' class='imgCls' onclick='transCompositionImg()' title='结构图'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_execute.png' class='imgCls' onclick='executeTrans()' title='执行转换配置'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_assigned.png' class='imgCls' onclick='beforeAssigned()' title='分配任务组'/>&nbsp;&nbsp;"
-                        //+"<img src='../../ui/images/i_power.png' class='imgCls' onclick='transPowerExecute()' title='智能执行'/>&nbsp;&nbsp;"
-                        ;
-                // }else{
-                //     return "<img src='../../ui/images/i_detail.png' class='imgCls' onclick='showOneTransDetail()' title='查看转换属性'/>&nbsp;&nbsp;"+
-                //         "<img src='../../ui/images/i_compositionImg.png' class='imgCls' onclick='transCompositionImg()' title='结构图'/>&nbsp;&nbsp;";
-                // }
+                        /*+"<img src='../../ui/images/i_power.png' class='imgCls' onclick='transPowerExecute()' title='智能执行'/>&nbsp;&nbsp;"*/;
+                }else{
+                    return "<img src='../../ui/images/i_detail.png' class='imgCls' onclick='showOneTransDetail()' title='查看转换属性'/>&nbsp;&nbsp;"+
+                         "<img src='../../ui/images/i_compositionImg.png' class='imgCls' onclick='transCompositionImg()' title='结构图'/>&nbsp;&nbsp;";
+                }
             }
         }
     ]);
@@ -47,6 +47,7 @@ function generateTrans(secondGuidePanel){
         {name:"modifiedUser",type:"string",mapping:"modifiedUser"},
         {name:"modifiedDate",type:"string",mapping:"modifiedDate"},
         {name:"belongToTaskGroup",type:"string",mapping:"belongToTaskGroup"},
+        {name:"belongToUserGroup",type:"string",mapping:"belongToUserGroup"},
 
     ])
     var reader=new Ext.data.JsonReader({totalProperty:"totalProperty",root:"root"},human);
@@ -71,17 +72,21 @@ function generateTrans(secondGuidePanel){
                 if(Ext.getCmp("userGroupCombox"))
                 	usergroupTo=Ext.getCmp("userGroupCombox").getValue();
                 
+                var taskGroupC = "";
+                if(Ext.getCmp("transTaskGroupCombox"))
+                	taskGroupC=Ext.getCmp("transTaskGroupCombox").getValue();
+                
                 store.baseParams = {
                     name:transName,
                     date:createDate,
                     username:usernameTo,
-                    usergroup:usergroupTo
+                    usergroup:usergroupTo,
+                    taskGroup : taskGroupC
                 }
             }
         }
     })
     store.load({params:{start:0,limit:15}});
-
 
     var inputTransName="";
     if(Ext.getCmp("transNameForSearch")!=undefined){
@@ -129,8 +134,12 @@ function generateTrans(secondGuidePanel){
     var chooseUsergroup="";
     if(Ext.getCmp("userGroupCombox"))
         chooseUsergroup=Ext.getCmp("userGroupCombox").getValue();
-    
     var userGroupCom=transUserGroupCombobox(chooseUsergroup);
+    
+    var chooseTaskGroup="";
+    if(Ext.getCmp("transTaskGroupCombox"))
+    	chooseTaskGroup=Ext.getCmp("transTaskGroupCombox").getValue();
+    var taskGroupCom=transTaskGroupCombobox(chooseUsergroup, chooseTaskGroup);    
     
     var inputUsername="";
     if(Ext.getCmp("userNameField"))
@@ -158,7 +167,7 @@ function generateTrans(secondGuidePanel){
         closable:true,
         tbar:new Ext.Toolbar({
             buttons:[
-                nameField ,"-",dateField,"-","-",userGroupCom,"-",usernameField,
+                nameField ,"-",dateField,"-","-",userGroupCom,"-",taskGroupCom,"-",usernameField,
                 {
                     iconCls:"searchCls",
                     tooltip: '查询',
@@ -178,10 +187,67 @@ function generateTrans(secondGuidePanel){
         })
     });
     grid.getColumnModel().setHidden(2,true);
-    grid.getColumnModel().setHidden(9,true);
     secondGuidePanel.removeAll(true);
     secondGuidePanel.add(grid);
     secondGuidePanel.doLayout();
+}
+
+/**
+ * 
+ */
+function transTaskGroupCombobox(userGroupCom, taskGroupName) {
+		if (userGroupCom == '') {
+			if (belongToUserGroup != 'Pristin') {
+				userGroupCom = belongToUserGroup;
+			}
+			
+			taskGroupName = '';
+		}
+
+		var proxy = new Ext.data.HttpProxy({
+			url : "/userGroup/getTaskGroupSelect.do"
+		});
+
+		var hostName = Ext.data.Record.create([
+		{
+			name : "id",
+			type : "String",
+			mapping : "id"
+		},
+		{
+			name : "name",
+			type : "String",
+			mapping : "name"
+		},
+	]);
+
+	var reader = new Ext.data.JsonReader({}, hostName);
+
+	var store = new Ext.data.Store({
+		proxy : proxy,
+		reader : reader,
+		baseParams : {
+			userGroup : userGroupCom
+		},
+	});
+
+	var taskGroupCom = new Ext.form.ComboBox({
+		id : "transTaskGroupCombox",
+		triggerAction : "all",
+		store : store,
+		displayField : "name",
+		valueField : "id",
+		mode: 'local',
+		emptyText : "任务组选择",
+		disabled : false
+	});
+
+	store.load();
+	store.on("load", function () {
+       taskGroupCom.setValue(taskGroupName);
+    })
+
+	return taskGroupCom;
 }
 
 //执行转换配置
@@ -220,7 +286,7 @@ function transPowerExecute(){
     var path=grid.getSelectionModel().getSelected().get("directoryName");
     Ext.MessageBox.confirm("确认","确认执行?",function(btn){
         if(btn=="yes"){
-            powerExecute(path,"transformation");
+            powerExecute(path, "transformation");
         }else{
             return;
         }
@@ -656,8 +722,12 @@ function transUserGroupCombobox(userGroupName){
 	    listeners:{
 	        //index是被选中的下拉项在整个列表中的下标 从0开始
 	        'select':function(combo,record,index){
-	            var secondGuidePanel=Ext.getCmp("secondGuidePanel");
-	            generateTrans(secondGuidePanel);
+	        	var s = Ext.getCmp('transTaskGroupCombox');
+	        	  s.store.baseParams.userGroup = combo.value;
+	        	  s.store.load();
+	        	  s.store.on("load", function () {
+	        		  s.setValue('');
+		    	  });
 	        }
 	    }
 	})
